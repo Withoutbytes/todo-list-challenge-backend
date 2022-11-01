@@ -22,6 +22,10 @@
       "commandName": "Docker",
       "launchBrowser": true,
       "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}/swagger",
+      "environmentVariables": {
+        "MONGODB_URL": "mongodb+srv://todolistchallange:rRNN3NcM53aBRqr@cluster0.p7qsa.mongodb.net/todolistchallange?retryWrites=true&w=majority",
+        "MONGODB_DATABASE_NAME": "todolistchallange"
+      },
       "publishAllPorts": true,
       "useSSL": true
     }

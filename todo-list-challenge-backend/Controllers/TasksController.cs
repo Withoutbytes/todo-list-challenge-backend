@@ -5,7 +5,7 @@ namespace todo_list_challenge_backend.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TasksController : Controller
+    public partial class TasksController : Controller
     {
         [HttpGet(Name = "GetTasks")]
         public Models.Task[] Get()
@@ -14,16 +14,16 @@ namespace todo_list_challenge_backend.Controllers
         }
 
         [HttpPost(Name = "CreateTask")]
-        public bool Post(string name)
+        public bool Post(PostReq req)
         {
-            TasksCollection.Create(new Models.Task { completed = true, createdAt = DateTime.Now, name = name });
+            TasksCollection.Create(new Models.Task { completed = true, createdAt = DateTime.Now, name = req.name });
             return true;
         }
 
         [HttpPut("{id:length(24)}", Name = "UpdateTask")]
-        public bool Put(string taskId, bool completed)
+        public bool Put(string taskId, PutRq req)
         {
-            TasksCollection.Update(taskId, completed);
+            TasksCollection.Update(taskId, req.completed);
             return true;
         }
 
@@ -34,10 +34,11 @@ namespace todo_list_challenge_backend.Controllers
             return true;
         }
 
-        [HttpPatch(Name = "UpdateAllTasks")]
-        public bool UpdateAllTasks(bool completed)
+        [HttpPatch]
+        [Route("UpdateAllTasks")]
+        public bool UpdateAllTasks(PatchUpdateAllTasksReq req)
         {
-            TasksCollection.UpdateAllTasks(completed);
+            TasksCollection.UpdateAllTasks(req.completed);
             return true;
         }
     }

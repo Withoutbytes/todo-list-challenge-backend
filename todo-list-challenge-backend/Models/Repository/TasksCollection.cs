@@ -4,8 +4,7 @@ namespace todo_list_challenge_backend.Models.Repository
 {
     public static class TasksCollection
     {
-        static internal Database _tasksCollection = new Database();
-        static internal IMongoCollection<Task> _tasks = _tasksCollection.db.GetCollection<Task>("tasks");
+        static internal IMongoCollection<Task> _tasks = Database.db.GetCollection<Task>("tasks");
 
         static public void Create(Task task)
         {
