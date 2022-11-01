@@ -35,8 +35,8 @@ namespace todo_list_challenge_backend.Controllers
         }
 
         [HttpPatch]
-        [Route("UpdateAllTasks")]
-        public bool UpdateAllTasks(PatchUpdateAllTasksReq req)
+        [Route("CheckAll")]
+        public bool CheckAll(PatchUpdateAllTasksReq req)
         {
             TasksCollection.UpdateAllTasks(req.completed);
             return true;
