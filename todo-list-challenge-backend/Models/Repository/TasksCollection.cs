@@ -4,47 +4,49 @@ namespace todo_list_challenge_backend.Models.Repository
 {
     public static class TasksCollection
     {
-        static internal IMongoCollection<Task> _tasks = Database.db.GetCollection<Task>("tasks");
+        static internal IMongoCollection<TaskRepository> _tasks = Database.db.GetCollection<TaskRepository>("tasks");
 
-        static public void Create(Task task)
+        static public async Task<TaskRepository> Create(TaskRepository task)
         {
-            _tasks.InsertOne(task);
+            await _tasks.InsertOneAsync(task);
+            return task;
         }
 
-        static public void Update(string taskId, bool completed)
+        static public async Task<UpdateResult> Update(string taskId, bool completed)
         {
-            var filter = Builders<Task>.Filter.Eq("_id", taskId);
-            var update = Builders<Task>.Update.Set("completed", completed);
-            _tasks.UpdateOne(filter, update);
+            var filter = Builders<TaskRepository>.Filter.Eq(s => s.Id, taskId);
+            var update = Builders<TaskRepository>.Update.Set("completed", completed);
+            return await _tasks.UpdateOneAsync(filter, update);
         }
 
-        static public void Delete(string taskId)
+        static public async Task<DeleteResult> Delete(string taskId)
         {
-            var filter = Builders<Task>.Filter.Eq("_id", taskId);
-            _tasks.DeleteOne(filter);
+            var filter = Builders<TaskRepository>.Filter.Eq(s => s.Id, taskId);
+            return await _tasks.DeleteOneAsync(filter);
         }
 
-        static public void UpdateAllTasks(bool completed)
+        static public async Task<UpdateResult> UpdateAllTasks(bool completed)
         {
-            var filter = Builders<Task>.Filter.Empty;
-            var update = Builders<Task>.Update.Set("completed", completed);
-            _tasks.UpdateMany(filter, update);
+            var filter = Builders<TaskRepository>.Filter.Empty;
+            var update = Builders<TaskRepository>.Update.Set("completed", completed);
+            return await _tasks.UpdateManyAsync(filter, update);
         }
 
-        static public Task Get(string taskId)
+        static public TaskRepository Get(string taskId)
         {
-            var filter = Builders<Task>.Filter.Eq("_id", taskId);
+            var filter = Builders<TaskRepository>.Filter.Eq(s => s.Id, taskId);
             return _tasks.Find(filter).FirstOrDefault();
         }
 
-        static public Task[] GetAll()
+        static public async Task<TaskRepository[]> GetAll()
         {
-            return _tasks.Find(Builders<Task>.Filter.Empty).ToList().ToArray();
+            var r = await _tasks.Find(Builders<TaskRepository>.Filter.Empty).ToListAsync();
+            return r.ToArray();
         }
 
-        static public void DeleteAll()
+        static public async Task<DeleteResult> DeleteAllAsync()
         {
-            _tasks.DeleteMany(Builders<Task>.Filter.Empty);
+            return await _tasks.DeleteManyAsync(Builders<TaskRepository>.Filter.Empty);
         }
 
     }

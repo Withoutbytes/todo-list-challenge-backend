@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace todo_list_challenge_backend.Models
 {
-    public class Task
+    public class TaskRepository
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

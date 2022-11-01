@@ -8,38 +8,37 @@ namespace todo_list_challenge_backend.Controllers
     public partial class TasksController : Controller
     {
         [HttpGet(Name = "GetTasks")]
-        public Models.Task[] Get()
+        public async Task<Models.TaskRepository[]> Get()
         {
-            return TasksCollection.GetAll();
+            return await TasksCollection.GetAll();
         }
 
         [HttpPost(Name = "CreateTask")]
-        public bool Post(PostReq req)
+        public async Task<Models.TaskRepository> Post(PostReq req)
         {
-            TasksCollection.Create(new Models.Task { completed = true, createdAt = DateTime.Now, name = req.name });
-            return true;
+            return await TasksCollection.Create(new Models.TaskRepository { completed = true, createdAt = DateTime.Now, name = req.name });
         }
 
-        [HttpPut("{id:length(24)}", Name = "UpdateTask")]
-        public bool Put(string taskId, PutRq req)
+        [HttpPut("{taskId:length(24)}", Name = "UpdateTask")]
+        public async Task<bool> Put(string taskId, PutRq req)
         {
-            TasksCollection.Update(taskId, req.completed);
-            return true;
+            var r = await TasksCollection.Update(taskId, req.completed);
+            return r.IsAcknowledged;
         }
 
-        [HttpDelete("{id:length(24)}", Name = "DeleteTask")]
-        public bool Delete(string taskId)
+        [HttpDelete("{taskId:length(24)}", Name = "DeleteTask")]
+        public async Task<bool> Delete(string taskId)
         {
-            TasksCollection.Delete(taskId);
-            return true;
+            var r = await TasksCollection.Delete(taskId);
+            return r.IsAcknowledged;
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Route("CheckAll")]
-        public bool CheckAll(PatchUpdateAllTasksReq req)
+        public async Task<bool> CheckAll(PatchUpdateAllTasksReq req)
         {
-            TasksCollection.UpdateAllTasks(req.completed);
-            return true;
+            var r = await TasksCollection.UpdateAllTasks(req.completed);
+            return r.IsAcknowledged;
         }
     }
 }
