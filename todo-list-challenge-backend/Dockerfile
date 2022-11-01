@@ -6,16 +6,16 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["teste-web-api/teste-web-api.csproj", "teste-web-api/"]
-RUN dotnet restore "teste-web-api/teste-web-api.csproj"
+COPY ["todo-list-challenge-backend/todo-list-challenge-backend.csproj", "todo-list-challenge-backend/"]
+RUN dotnet restore "todo-list-challenge-backend/todo-list-challenge-backend.csproj"
 COPY . .
-WORKDIR "/src/teste-web-api"
-RUN dotnet build "teste-web-api.csproj" -c Release -o /app/build
+WORKDIR "/src/todo-list-challenge-backend"
+RUN dotnet build "todo-list-challenge-backend.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "teste-web-api.csproj" -c Release -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "todo-list-challenge-backend.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "teste-web-api.dll"]
+ENTRYPOINT ["dotnet", "todo-list-challenge-backend.dll"]
